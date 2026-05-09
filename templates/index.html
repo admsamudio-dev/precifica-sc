@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precifica SC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#1e293b;font-size:14px}
+/* HEADER */
+.header{background:#1e40af;color:#fff;padding:0 1.5rem;height:56px;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+.header-title{font-size:17px;font-weight:700;letter-spacing:-.3px;flex:1}
+.header-sub{font-size:11px;opacity:.7}
+.header-user{font-size:12px;opacity:.85;display:flex;align-items:center;gap:8px}
+.btn-logout{padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:12px;cursor:pointer}
+.btn-logout:hover{background:rgba(255,255,255,.1)}
+.btn-admin{padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:12px;cursor:pointer}
+/* LAYOUT */
+.main{display:grid;grid-template-columns:340px 1fr;gap:1rem;padding:1rem;max-width:1400px;margin:0 auto}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+/* CARD */
+.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+/* FORM */
+.field{margin-bottom:.85rem}
+.field label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:4px}
+.field input,.field select{width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:7px;font-size:13px;outline:none}
+.field input:focus,.field select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.field-fixed input{background:#f1f5f9;color:#64748b;cursor:not-allowed}
+.btn-save{width:100%;padding:10px;background:#1e40af;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-save:hover{background:#1d4ed8}
+.btn-clr{width:100%;padding:8px;background:#fff;color:#64748b;border:1px solid #cbd5e1;border-radius:8px;font-size:12px;cursor:pointer;margin-top:6px}
+.btn-clr:hover{background:#f8fafc}
+/* ICMS PREVIEW */
+.icms-prev{margin-top:.75rem;padding:.75rem;border-radius:8px;background:#eff6ff;border:1px solid #bfdbfe;display:none}
+.icms-prev .aliq{font-size:15px;font-weight:700;color:#1e40af}
+.icms-prev .regra{font-size:11px;color:#3b82f6;margin-top:2px}
+.icms-outros{display:flex;gap:6px;margin-top:.5rem;flex-wrap:wrap}
+.ic-badge{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid #e2e8f0;color:#64748b}
+.ic-badge b{color:#1e293b}
+/* LISTA PRODUTOS */
+.empty{text-align:center;padding:3rem 1rem;color:#94a3b8}
+.empty-icon{font-size:40px;margin-bottom:.5rem}
+.prod-card{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:.75rem;overflow:hidden}
+.prod-header{display:flex;align-items:center;gap:8px;padding:.7rem .9rem;background:#f8fafc;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+.prod-code{font-size:11px;font-weight:700;color:#1e40af;background:#dbeafe;padding:2px 8px;border-radius:6px}
+.prod-desc{font-weight:600;font-size:13px;flex:1}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:10px;font-weight:600}
+.tag-nac{background:#dcfce7;color:#166534}
+.tag-imp{background:#fef3c7;color:#92400e}
+.prod-meta{font-size:11px;color:#64748b;margin-left:auto}
+.btn-del{background:none;border:none;cursor:pointer;color:#94a3b8;padding:3px;border-radius:4px;font-size:16px}
+.btn-del:hover{color:#ef4444;background:#fee2e2}
+/* ROTA */
+.rota-bar{display:flex;align-items:center;gap:6px;padding:.5rem .9rem;background:#eff6ff;border-bottom:1px solid #dbeafe;font-size:11px;flex-wrap:wrap}
+.uf-sc{font-weight:700;padding:1px 8px;border-radius:99px;background:#1e40af;color:#fff;font-size:11px}
+.uf-dest{font-weight:700;padding:1px 8px;border-radius:99px;background:#fff;border:1px solid #cbd5e1;color:#1e293b;font-size:11px}
+.icms-tag{padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;margin-left:4px}
+.ic4{background:#dbeafe;color:#1e40af}
+.ic7{background:#dcfce7;color:#166534}
+.ic12{background:#fef3c7;color:#92400e}
+.ic17{background:#fee2e2;color:#991b1b}
+/* RESUMO CARDS */
+.resumo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;padding:.6rem .9rem;border-bottom:1px solid #e2e8f0}
+.res-card{background:#f8fafc;border-radius:7px;padding:.5rem .6rem}
+.res-label{font-size:10px;color:#64748b;margin-bottom:2px}
+.res-val{font-size:14px;font-weight:700;color:#1e293b}
+.res-sub{font-size:10px;color:#94a3b8}
+/* TABS */
+.tabs{display:flex;gap:2px;padding:.4rem .9rem;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+.tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:none;color:#64748b}
+.tab.on{background:#fff;border:1px solid #e2e8f0;color:#1e293b}
+.tab-body{padding:.75rem .9rem;overflow-x:auto}
+/* TABELA */
+table{width:100%;border-collapse:collapse;font-size:11.5px;min-width:500px}
+th{padding:5px 7px;font-size:10px;font-weight:600;color:#64748b;border-bottom:1px solid #e2e8f0;background:#f8fafc;text-align:left;white-space:nowrap}
+td{padding:5px 7px;border-bottom:1px solid #f1f5f9;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.num{text-align:right}
+.pos{color:#16a34a;font-weight:600}
+.neg{color:#dc2626;font-weight:600}
+.best{background:#dcfce7;color:#166534;padding:1px 6px;border-radius:99px;font-size:10px;font-weight:600}
+.atual{background:#f0f9ff}
+/* COMP HEADERS */
+.h4{background:#dbeafe;color:#1e40af}
+.h7{background:#dcfce7;color:#166534}
+.h12{background:#fef3c7;color:#92400e}
+.sep{border-left:1px solid #e2e8f0}
+/* NOTICE */
+.notice{font-size:10px;color:#94a3b8;padding:.4rem .9rem;border-top:1px solid #f1f5f9}
+/* MODAL ADMIN */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:1.5rem;width:100%;max-width:480px;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.btn-close{background:none;border:none;font-size:18px;cursor:pointer;color:#64748b}
+.btn-sm{padding:5px 12px;border-radius:6px;border:1px solid #cbd5e1;font-size:12px;cursor:pointer;background:#fff}
+.btn-sm:hover{background:#f1f5f9}
+.btn-danger{border-color:#fca5a5;color:#dc2626}
+.btn-danger:hover{background:#fee2e2}
+.btn-primary{background:#1e40af;color:#fff;border-color:#1e40af}
+.btn-primary:hover{background:#1d4ed8}
+.user-row{display:flex;align-items:center;gap:8px;padding:.5rem 0;border-bottom:1px solid #f1f5f9}
+.user-row:last-child{border-bottom:none}
+.u-name{font-weight:600;font-size:13px;flex:1}
+.u-email{font-size:11px;color:#64748b}
+.u-badge{font-size:10px;padding:1px 6px;border-radius:99px;background:#fef3c7;color:#92400e;font-weight:600}
+.msg{font-size:12px;padding:.4rem .6rem;border-radius:6px;margin-top:.4rem;display:none}
+.msg.ok{background:#dcfce7;color:#166534;display:block}
+.msg.err{background:#fee2e2;color:#dc2626;display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Precifica SC</div>
+    <div class="header-sub">Santa Catarina · Lucro Presumido</div>
+  </div>
+  <div class="header-user">
+    <span id="usr-nome">{{ usuario }}</span>
+    {% if session.get('admin') %}
+    <button class="btn-admin" onclick="abrirAdmin()">Equipe</button>
+    {% endif %}
+    <a href="/logout"><button class="btn-logout">Sair</button></a>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FORMULÁRIO -->
+  <div>
+    <div class="card">
+      <div class="card-title">&#x2795; Cadastrar produto</div>
+
+      <div class="field">
+        <label>Código</label>
+        <input type="text" id="f-cod" placeholder="Ex: P001">
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <input type="text" id="f-desc" placeholder="Nome do produto">
+      </div>
+      <div class="field">
+        <label>Custo (R$)</label>
+        <input type="number" id="f-custo" placeholder="0,00" min="0" step="0.01">
+      </div>
+      <div class="field">
+        <label>Frete (R$) <span style="font-weight:400;color:#94a3b8">opcional</span></label>
+        <input type="number" id="f-frete" placeholder="0,00" min="0" step="0.01">
+      </div>
+      <div class="field">
+        <label>Tipo do produto</label>
+        <select id="f-tipo" onchange="atualizarPreview()">
+          <option value="nacional">Nacional</option>
+          <option value="importado">Importado (Res. 13)</option>
+        </select>
+      </div>
+      <div class="field field-fixed">
+        <label>Origem <span style="font-size:10px;color:#3b82f6;font-weight:600">(fixo)</span></label>
+        <input type="text" value="SC — Santa Catarina" readonly>
+      </div>
+      <div class="field">
+        <label>Estado de destino</label>
+        <select id="f-uf" onchange="atualizarPreview()">
+          <option value="">Selecione o estado...</option>
+        </select>
+      </div>
+
+      <div class="icms-prev" id="prev">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:#3b82f6">SC &#x2192;</span>
+          <span id="prev-dest" style="font-size:11px;font-weight:600"></span>
+          <span id="prev-badge" class="icms-tag"></span>
+        </div>
+        <div id="prev-regra" class="regra"></div>
+        <div class="icms-outros" id="prev-outros"></div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+      <button class="btn-save" onclick="salvar()">&#x1F4BE; Salvar produto</button>
+      <button class="btn-clr" onclick="limpar()">Limpar campos</button>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div>
+    <div id="lista">
+      <div class="empty">
+        <div class="empty-icon">&#x1F4E6;</div>
+        <div>Carregando produtos...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN -->
+<div class="overlay" id="admin-overlay">
+  <div class="modal">
+    <div class="modal-title">
+      Gerenciar equipe
+      <button class="btn-close" onclick="fecharAdmin()">&#x2715;</button>
+    </div>
+    <div id="admin-body">Carregando...</div>
+    <hr style="margin:1rem 0;border:none;border-top:1px solid #e2e8f0">
+    <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:.75rem">Adicionar usuário</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="field"><label>Nome</label><input type="text" id="u-nome"></div>
+      <div class="field"><label>E-mail</label><input type="email" id="u-email"></div>
+      <div class="field"><label>Senha</label><input type="password" id="u-senha"></div>
+      <div class="field"><label>Admin?</label>
+        <select id="u-admin"><option value="false">Não</option><option value="true">Sim</option></select>
+      </div>
+    </div>
+    <button class="btn-sm btn-primary" onclick="criarUsuario()" style="width:100%;margin-top:.25rem;padding:8px">Adicionar usuário</button>
+    <div id="u-msg" class="msg"></div>
+  </div>
+</div>
+
+<script>
+const ESTADOS=[
+  {uf:'AC',nome:'Acre'},{uf:'AL',nome:'Alagoas'},{uf:'AM',nome:'Amazonas'},
+  {uf:'AP',nome:'Amapá'},{uf:'BA',nome:'Bahia'},{uf:'CE',nome:'Ceará'},
+  {uf:'DF',nome:'Distrito Federal'},{uf:'ES',nome:'Espírito Santo'},{uf:'GO',nome:'Goiás'},
+  {uf:'MA',nome:'Maranhão'},{uf:'MG',nome:'Minas Gerais'},{uf:'MS',nome:'Mato Grosso do Sul'},
+  {uf:'MT',nome:'Mato Grosso'},{uf:'PA',nome:'Pará'},{uf:'PB',nome:'Paraíba'},
+  {uf:'PE',nome:'Pernambuco'},{uf:'PI',nome:'Piauí'},{uf:'PR',nome:'Paraná'},
+  {uf:'RJ',nome:'Rio de Janeiro'},{uf:'RN',nome:'Rio Gd. Norte'},{uf:'RO',nome:'Rondônia'},
+  {uf:'RR',nome:'Roraima'},{uf:'RS',nome:'Rio Gd. do Sul'},{uf:'SC',nome:'Santa Catarina'},
+  {uf:'SE',nome:'Sergipe'},{uf:'SP',nome:'São Paulo'},{uf:'TO',nome:'Tocantins'},
+];
+
+const SE_SUL=['SP','RJ','MG','ES','PR','RS'];
+const NOTAS={4:'Importado Res.13/2012',7:'SC → N/NE/CO',12:'SC → Sul/Sudeste',17:'Operação interna SC'};
+const PIS=0.0065,COFINS=0.03,CSLL=0.0108,IRPJ=0.012,TV=PIS+COFINS+CSLL+IRPJ;
+const MKS=[10,20,30,40,50,60];
+const isAdmin = {{ 'true' if session.get('admin') else 'false' }};
+
+const sel=document.getElementById('f-uf');
+ESTADOS.forEach(e=>{
+  const o=document.createElement('option');
+  o.value=e.uf; o.textContent=`${e.uf} — ${e.nome}`; sel.appendChild(o);
+});
+
+function icmsLocal(uf,tipo){
+  if(uf==='SC') return {aliq:17,regra:'Operação interna SC'};
+  if(tipo==='importado') return {aliq:4,regra:'Importado (Res. 13/2012)'};
+  if(SE_SUL.includes(uf)) return {aliq:12,regra:'Interestadual SC → Sul/Sudeste'};
+  return {aliq:7,regra:'Interestadual SC → N/NE/CO'};
+}
+
+function icmsClass(a){return a===4?'ic4':a===7?'ic7':a===12?'ic12':'ic17'}
+
+function atualizarPreview(){
+  const uf=document.getElementById('f-uf').value;
+  const tipo=document.getElementById('f-tipo').value;
+  const box=document.getElementById('prev');
+  if(!uf){box.style.display='none';return}
+  const {aliq,regra}=icmsLocal(uf,tipo);
+  const e=ESTADOS.find(x=>x.uf===uf);
+  box.style.display='block';
+  document.getElementById('prev-dest').textContent=`${e.nome} (${uf})`;
+  const badge=document.getElementById('prev-badge');
+  badge.textContent=`ICMS ${aliq}%`; badge.className=`icms-tag ${icmsClass(aliq)}`;
+  document.getElementById('prev-regra').textContent=regra;
+  const outros=[4,7,12].filter(a=>a!==aliq);
+  document.getElementById('prev-outros').innerHTML=outros.map(a=>
+    `<span class="ic-badge"><b>${a}%</b> — ${NOTAS[a]}</span>`
+  ).join('');
+}
+
+function fmt(v){return 'R$ '+v.toFixed(2).replace('.',',')}
+function pct(v){return v.toFixed(1).replace('.',',')+'%'}
+
+function showMsg(id,txt,t){
+  const el=document.getElementById(id);
+  el.textContent=txt; el.className=`msg ${t}`;
+  setTimeout(()=>{el.className='msg';el.textContent=''},3000);
+}
+
+async function salvar(){
+  const cod=document.getElementById('f-cod').value.trim();
+  const desc=document.getElementById('f-desc').value.trim();
+  const custo=parseFloat(document.getElementById('f-custo').value)||0;
+  const frete=parseFloat(document.getElementById('f-frete').value)||0;
+  const tipo=document.getElementById('f-tipo').value;
+  const uf=document.getElementById('f-uf').value;
+  if(!cod||!desc||custo<=0||!uf){showMsg('msg','Preencha todos os campos obrigatórios.','err');return}
+  const res=await fetch('/api/produtos',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({codigo:cod,descricao:desc,custo,frete,tipo,uf_destino:uf})});
+  if(res.ok){showMsg('msg','Produto salvo!','ok');limpar();carregarProdutos();}
+  else{const d=await res.json();showMsg('msg',d.erro||'Erro ao salvar.','err');}
+}
+
+function limpar(){
+  ['f-cod','f-desc','f-custo','f-frete'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-tipo').value='nacional';
+  document.getElementById('f-uf').value='';
+  document.getElementById('prev').style.display='none';
+}
+
+async function deletar(id){
+  if(!confirm('Remover este produto?')) return;
+  await fetch(`/api/produtos/${id}`,{method:'DELETE'});
+  carregarProdutos();
+}
+
+function mkTabela(markups, icms_aliq){
+  return markups.map(m=>{
+    const best=m.margem>0;
+    return `<tr>
+      <td><b>MK ${m.mk}%</b></td>
+      <td class="num">${fmt(m.preco)}</td>
+      <td class="num" style="color:#64748b">${fmt(m.tributos)}</td>
+      <td class="num ${m.margem>0?'pos':'neg'}">${fmt(m.margem)}</td>
+      <td class="num ${m.margem>0?'pos':'neg'}">${pct(m.margem_pct)}</td>
+      <td>${best?'<span class="best">ok</span>':m.margem<=0?'<span style="font-size:10px;color:#dc2626">negativo</span>':''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function compTabela(comp, aliq_atual){
+  const ics=[4,7,12];
+  const headers=ics.map(ic=>`<th colspan="4" class="sep ${ic===4?'h4':ic===7?'h7':'h12'}" style="text-align:center">ICMS ${ic}%${ic===aliq_atual?' ★':''}</th>`).join('');
+  const subH=ics.map(ic=>`<th class="sep num ${ic===4?'h4':ic===7?'h7':'h12'}">Preço</th><th class="num ${ic===4?'h4':ic===7?'h7':'h12'}">Tributos</th><th class="num ${ic===4?'h4':ic===7?'h7':'h12'}">Margem R$</th><th class="num ${ic===4?'h4':ic===7?'h7':'h12'}">Margem %</th>`).join('');
+  const rows=MKS.map((mk,i)=>{
+    const cols=ics.map(ic=>{
+      const r=comp[ic][i];
+      const isAt=ic===aliq_atual;
+      const s=isAt?'class="atual"':'';
+      return `<td class="sep num" ${s}>${fmt(r.preco)}</td><td class="num" ${s} style="color:#64748b">${fmt(r.tributos)}</td><td class="num ${r.margem>0?'pos':'neg'}" ${s}>${fmt(r.margem)}</td><td class="num ${r.margem>0?'pos':'neg'}" ${s}>${pct(r.margem_pct)}</td>`;
+    }).join('');
+    return `<tr><td><b>MK ${mk}%</b></td>${cols}</tr>`;
+  }).join('');
+  return `<table><thead><tr><th rowspan="2">Markup</th>${headers}</tr><tr>${subH}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderProd(p){
+  const ct=p.custo+p.frete;
+  const ic=p.icms_aliq;
+  const icCls=icmsClass(ic);
+  const totalTrib=ic+TV*100;
+  return `<div class="prod-card">
+    <div class="prod-header">
+      <span class="prod-code">${p.codigo}</span>
+      <span class="prod-desc">${p.descricao}</span>
+      <span class="tag tag-${p.tipo}">${p.tipo==='nacional'?'Nacional':'Importado'}</span>
+      <span class="prod-meta">${p.usuario} · ${p.criado_em}</span>
+      <button class="btn-del" onclick="deletar(${p.id})" title="Remover">&#x1F5D1;</button>
+    </div>
+    <div class="rota-bar">
+      <span class="uf-sc">SC</span>
+      <span style="color:#3b82f6">&#x2192;</span>
+      <span class="uf-dest">${p.uf_destino}</span>
+      <span style="color:#64748b;font-size:11px">${p.icms_regra}</span>
+      <span class="icms-tag ${icCls}" style="margin-left:auto">ICMS ${ic}%</span>
+    </div>
+    <div class="resumo-grid">
+      <div class="res-card"><div class="res-label">Custo produto</div><div class="res-val">${fmt(p.custo)}</div>${p.frete>0?`<div class="res-sub">+ frete ${fmt(p.frete)}</div>`:''}</div>
+      <div class="res-card"><div class="res-label">Custo total</div><div class="res-val">${fmt(ct)}</div></div>
+      <div class="res-card"><div class="res-label">ICMS operação</div><div class="res-val" style="color:${ic===4?'#1e40af':ic===7?'#166534':ic===12?'#92400e':'#991b1b'}">${ic}%</div></div>
+      <div class="res-card"><div class="res-label">PIS+COFINS</div><div class="res-val" style="color:#475569">3,65%</div><div class="res-sub">s/ venda</div></div>
+      <div class="res-card"><div class="res-label">CSLL+IRPJ</div><div class="res-val" style="color:#475569">2,28%</div><div class="res-sub">s/ venda</div></div>
+      <div class="res-card"><div class="res-label">Total tributos</div><div class="res-val" style="color:#dc2626">${pct(totalTrib)}</div></div>
+    </div>
+    <div class="tabs" id="tabs-${p.id}">
+      <button class="tab on" data-tab="mk" onclick="trocarTab(${p.id},'mk',this)">Markups</button>
+      <button class="tab" data-tab="comp" onclick="trocarTab(${p.id},'comp',this)">ICMS 4% · 7% · 12%</button>
+    </div>
+    <div class="tab-body" id="tb-mk-${p.id}">
+      <table>
+        <thead><tr><th>Markup</th><th class="num">Preço venda</th><th class="num">Total tributos</th><th class="num">Margem líq. R$</th><th class="num">Margem líq. %</th><th></th></tr></thead>
+        <tbody>${mkTabela(p.markups, ic)}</tbody>
+      </table>
+    </div>
+    <div class="tab-body" id="tb-comp-${p.id}" style="display:none">
+      ${compTabela(p.comparativo, ic)}
+    </div>
+    <div class="notice">* Margem líquida = Preço − Custo total − (ICMS ${ic}% + PIS 0,65% + COFINS 3% + CSLL 1,08% + IRPJ 1,2%). ★ = alíquota desta operação.</div>
+  </div>`;
+}
+
+function icmsClass(a){return a===4?'ic4':a===7?'ic7':a===12?'ic12':'ic17'}
+
+function trocarTab(id,tab,btn){
+  document.querySelectorAll(`#tabs-${id} .tab`).forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(`tb-mk-${id}`).style.display=tab==='mk'?'block':'none';
+  document.getElementById(`tb-comp-${id}`).style.display=tab==='comp'?'block':'none';
+}
+
+async function carregarProdutos(){
+  const res=await fetch('/api/produtos');
+  const lista=await res.json();
+  const div=document.getElementById('lista');
+  if(!lista.length){
+    div.innerHTML='<div class="empty"><div class="empty-icon">&#x1F4E6;</div><div>Nenhum produto cadastrado ainda.</div><div style="font-size:12px;color:#94a3b8;margin-top:.25rem">Use o formulário ao lado para adicionar.</div></div>';
+    return;
+  }
+  div.innerHTML=lista.map(renderProd).join('');
+}
+
+// ADMIN
+async function abrirAdmin(){
+  document.getElementById('admin-overlay').classList.add('show');
+  await carregarUsuarios();
+}
+function fecharAdmin(){document.getElementById('admin-overlay').classList.remove('show')}
+
+async function carregarUsuarios(){
+  const res=await fetch('/api/usuarios');
+  const lista=await res.json();
+  document.getElementById('admin-body').innerHTML=lista.map(u=>`
+    <div class="user-row">
+      <div><div class="u-name">${u.nome} ${u.admin?'<span class="u-badge">ADMIN</span>':''}</div><div class="u-email">${u.email}</div></div>
+      <button class="btn-sm btn-danger" onclick="removerUsuario(${u.id})" style="margin-left:auto">Remover</button>
+    </div>`).join('');
+}
+
+async function criarUsuario(){
+  const nome=document.getElementById('u-nome').value.trim();
+  const email=document.getElementById('u-email').value.trim();
+  const senha=document.getElementById('u-senha').value;
+  const admin=document.getElementById('u-admin').value==='true';
+  if(!nome||!email||!senha){showMsg('u-msg','Preencha todos os campos.','err');return}
+  const res=await fetch('/api/usuarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email,senha,admin})});
+  if(res.ok){showMsg('u-msg','Usuário criado!','ok');['u-nome','u-email','u-senha'].forEach(id=>document.getElementById(id).value='');await carregarUsuarios();}
+  else{const d=await res.json();showMsg('u-msg',d.erro||'Erro.','err');}
+}
+
+async function removerUsuario(id){
+  if(!confirm('Remover este usuário?')) return;
+  await fetch(`/api/usuarios/${id}`,{method:'DELETE'});
+  await carregarUsuarios();
+}
+
+carregarProdutos();
+</script>
+</body>
+</html>
