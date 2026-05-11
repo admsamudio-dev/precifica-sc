@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Precifica SC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+
+/* NAV */
+nav{background:#0f172a;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.nav-logo{color:#38bdf8;font-weight:700;font-size:1.1rem;letter-spacing:-.3px}
+.nav-logo span{color:#94a3b8;font-weight:400;font-size:.8rem;margin-left:8px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user{color:#94a3b8;font-size:.85rem}
+.btn-nav{background:#1e293b;border:1px solid #334155;color:#cbd5e1;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;transition:all .2s}
+.btn-nav:hover{background:#334155;color:#fff}
+.btn-nav.danger{border-color:#7f1d1d;color:#fca5a5}
+.btn-nav.danger:hover{background:#450a0a}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:360px 1fr;gap:0;height:calc(100vh - 56px)}
+
+/* PAINEL ESQUERDO */
+.sidebar{background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:20px 20px 16px;border-bottom:1px solid #e2e8f0}
+.sidebar-header h2{font-size:.9rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.5px}
+.form-area{padding:20px;flex:1;overflow-y:auto}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.field input,.field select{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 12px;font-size:.9rem;color:#1e293b;background:#fff;outline:none;transition:border .2s}
+.field input:focus,.field select:focus{border-color:#0ea5e9}
+
+/* ORIGEM TOGGLE */
+.origem-toggle{display:flex;gap:8px;margin-bottom:14px}
+.origem-btn{flex:1;padding:10px;border:2px solid #e2e8f0;border-radius:8px;background:#f8fafc;cursor:pointer;font-size:.85rem;font-weight:600;color:#64748b;transition:all .2s;text-align:center}
+.origem-btn.ativo.nacional{border-color:#16a34a;background:#f0fdf4;color:#16a34a}
+.origem-btn.ativo.importado{border-color:#d97706;background:#fffbeb;color:#d97706}
+
+.btn-salvar{width:100%;background:#0ea5e9;border:none;border-radius:8px;padding:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px}
+.btn-salvar:hover{background:#0284c7}
+
+/* LISTA */
+.lista-header{padding:12px 20px;border-top:1px solid #e2e8f0;background:#f8fafc}
+.lista-header h3{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.busca-wrap{position:relative;margin-top:6px}
+.busca-wrap input{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 12px 8px 32px;font-size:.82rem;color:#1e293b;background:#fff;outline:none;transition:border .2s}
+.busca-wrap input:focus{border-color:#0ea5e9}
+.busca-wrap .ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.85rem;pointer-events:none}
+.lista-vazia{padding:16px;color:#94a3b8;font-size:.82rem;text-align:center}
+.lista{flex:1;overflow-y:auto;max-height:260px}
+.item-card{padding:10px 16px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px}
+.item-card:hover{background:#f0f9ff}
+.item-card.ativo{background:#e0f2fe;border-left:3px solid #0ea5e9}
+.item-cod{font-size:.7rem;font-weight:700;color:#94a3b8;min-width:44px}
+.item-desc{flex:1;font-size:.82rem;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-origem{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.badge-nacional{background:#dcfce7;color:#16a34a}
+.badge-importado{background:#fef3c7;color:#d97706}
+.item-lixo{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:1rem;padding:2px 4px;border-radius:4px;transition:color .2s}
+.item-lixo:hover{color:#ef4444}
+
+/* PAINEL DIREITO */
+.main{background:#f1f5f9;overflow-y:auto;padding:24px}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#94a3b8;gap:12px}
+.empty-state svg{opacity:.3}
+.empty-state p{font-size:.95rem}
+
+/* PRODUTO HEADER */
+.prod-header{background:#fff;border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.prod-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.prod-cod{background:#0f172a;color:#38bdf8;font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:6px}
+.prod-nome{font-size:1.1rem;font-weight:700;color:#0f172a;flex:1}
+.prod-meta{color:#94a3b8;font-size:.8rem;margin-top:8px;display:flex;gap:16px;flex-wrap:wrap}
+.tag-origem{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.tag-nacional{background:#dcfce7;color:#16a34a}
+.tag-importado{background:#fef3c7;color:#d97706}
+
+/* CUSTOS */
+.custos-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.custo-card{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.custo-card .lbl{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.custo-card .val{font-size:1.05rem;font-weight:700;color:#0f172a}
+.custo-card .val.destaque{color:#0ea5e9}
+.custo-card .sub{font-size:.72rem;color:#94a3b8;margin-top:2px}
+
+/* MARKUPS */
+.mk-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.mk-tab{padding:6px 14px;border-radius:6px;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;font-size:.8rem;font-weight:600;color:#64748b;transition:all .2s}
+.mk-tab.ativo{border-color:#0ea5e9;background:#e0f2fe;color:#0284c7}
+
+/* ABAS DE ICMS */
+.icms-tabs-wrap{margin-bottom:0}
+.icms-tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:0}
+.icms-tab{padding:10px 20px;font-size:.82rem;font-weight:700;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px;border-radius:6px 6px 0 0;background:none;border-left:none;border-right:none;border-top:none;user-select:none}
+.icms-tab:hover{color:#475569;background:#f8fafc}
+.icms-tab.ativo{color:#0284c7;border-bottom:3px solid #0ea5e9;background:#f0f9ff}
+.icms-tab.bloqueado{opacity:.35;cursor:not-allowed;pointer-events:none}
+.icms-tab .tag-mini{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:2px}
+.tag-mini-17{background:#fee2e2;color:#dc2626}
+.tag-mini-12{background:#dbeafe;color:#1d4ed8}
+.tag-mini-7{background:#ede9fe;color:#7c3aed}
+.tag-mini-4{background:#fef3c7;color:#d97706}
+
+/* TABELA DE ESTADOS */
+.tabela-wrap{background:#fff;border-radius:0 12px 12px 12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px}
+.tabela-titulo{padding:14px 20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:8px}
+.tabela-titulo h3{font-size:.85rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#f8fafc}
+th{padding:10px 14px;text-align:left;font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+td{padding:9px 14px;border-top:1px solid #f1f5f9;font-size:.83rem;color:#334155;white-space:nowrap}
+tr:hover td{background:#f8fafc}
+.tag-aliq{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:4px}
+.tag-17{background:#fee2e2;color:#dc2626}
+.tag-12{background:#dbeafe;color:#1d4ed8}
+.tag-7{background:#ede9fe;color:#7c3aed}
+.tag-4{background:#fef3c7;color:#b45309}
+.mk-col{font-weight:600}
+.margem-pos{color:#16a34a;font-weight:700}
+.margem-neg{color:#dc2626;font-weight:700}
+.margem-ok{font-size:.68rem;font-weight:600;padding:2px 6px;border-radius:4px;margin-left:4px}
+.ok{background:#dcfce7;color:#15803d}
+.neg{background:#fee2e2;color:#dc2626}
+.sep-row td{background:#f8fafc;padding:6px 14px;font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;border-top:2px solid #e2e8f0}
+
+/* VAZIO (aba bloqueada) */
+.aba-vazia{padding:40px 20px;text-align:center;color:#cbd5e1}
+.aba-vazia .icone{font-size:2.5rem;margin-bottom:12px;opacity:.5}
+.aba-vazia p{font-size:.88rem;font-weight:600;margin-bottom:4px;color:#94a3b8}
+.aba-vazia small{font-size:.78rem;color:#cbd5e1}
+
+/* MODAL EQUIPE */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:32px;width:100%;max-width:500px;max-height:80vh;overflow-y:auto}
+.modal h2{font-size:1.1rem;font-weight:700;margin-bottom:20px}
+.modal .field label{color:#374151}
+.modal .field input,.modal .field select{border-color:#d1d5db}
+.btn-criar{background:#0ea5e9;border:none;border-radius:8px;padding:10px 20px;color:#fff;font-weight:600;cursor:pointer;font-size:.9rem}
+.msg{padding:8px 12px;border-radius:6px;font-size:.82rem;margin-top:8px}
+.msg.ok{background:#dcfce7;color:#15803d}
+.msg.err{background:#fee2e2;color:#dc2626}
+.u-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #f1f5f9;border-radius:8px;margin-bottom:8px}
+.u-nome{font-weight:600;font-size:.88rem}
+.u-email{font-size:.78rem;color:#64748b}
+.u-badge{background:#fef3c7;color:#d97706;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px}
+.btn-sm{padding:5px 10px;border-radius:5px;border:none;cursor:pointer;font-size:.78rem;font-weight:600}
+.btn-danger{background:#fee2e2;color:#dc2626}
+.btn-danger:hover{background:#dc2626;color:#fff}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#94a3b8;margin-top:-4px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Precifica SC <span>Indústrias Allca</span></div>
+  <div class="nav-right">
+    <span class="nav-user">{{ nome }}</span>
+    {% if is_admin %}
+    <button class="btn-nav" onclick="abrirEquipe()">👥 Equipe</button>
+    {% endif %}
+    <a href="/logout"><button class="btn-nav danger">Sair</button></a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>+ Cadastrar Produto</h2>
+    </div>
+    <div class="form-area">
+      <div class="field">
+        <label>Código</label>
+        <input id="f-cod" placeholder="Ex: P001">
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <input id="f-desc" placeholder="Nome do produto">
+      </div>
+      <div class="field">
+        <label>Custo (R$)</label>
+        <input id="f-custo" type="number" step="0.01" min="0" placeholder="0,00">
+      </div>
+      <div class="field">
+        <label>Frete (R$) <span style="color:#94a3b8;font-weight:400">opcional</span></label>
+        <input id="f-frete" type="number" step="0.01" min="0" placeholder="0,00">
+      </div>
+      <div class="field">
+        <label>Origem do produto</label>
+        <div class="origem-toggle">
+          <div class="origem-btn ativo nacional" id="btn-nacional" onclick="setOrigem('nacional')">
+            🇧🇷 Nacional
+          </div>
+          <div class="origem-btn importado" id="btn-importado" onclick="setOrigem('importado')">
+            ✈️ Importado
+          </div>
+        </div>
+        <input type="hidden" id="f-origem" value="nacional">
+      </div>
+      <button class="btn-salvar" onclick="salvarProduto()">💾 Salvar produto</button>
+    </div>
+
+    <div class="lista-header">
+      <h3>Produtos cadastrados</h3>
+      <div class="busca-wrap">
+        <span class="ico">🔍</span>
+        <input id="busca-produto" placeholder="Buscar por código ou descrição..." oninput="filtrarProdutos()">
+      </div>
+    </div>
+    <div class="lista" id="lista-produtos"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main-area">
+    <div class="empty-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <path d="M8 12h8M12 8v8"/>
+      </svg>
+      <p>Selecione ou cadastre um produto para ver a precificação</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EQUIPE -->
+<div class="overlay" id="overlay-equipe">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharEquipe()">×</button>
+    <h2>👥 Gerenciar Equipe</h2>
+    <div id="lista-usuarios" style="margin-bottom:24px"></div>
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:20px">
+    <h3 style="font-size:.9rem;font-weight:700;margin-bottom:14px">Adicionar usuário</h3>
+    <div class="field"><label>Nome</label><input id="u-nome" placeholder="Nome completo"></div>
+    <div class="field"><label>E-mail</label><input id="u-email" type="email" placeholder="email@empresa.com"></div>
+    <div class="field"><label>Senha</label><input id="u-senha" type="password" placeholder="••••••••"></div>
+    <div class="field">
+      <label>Nível</label>
+      <select id="u-admin">
+        <option value="false">Usuário comum</option>
+        <option value="true">Administrador</option>
+      </select>
+    </div>
+    <button class="btn-criar" onclick="criarUsuario()">Criar usuário</button>
+    <div id="u-msg"></div>
+  </div>
+</div>
+
+<script>
+// ── DADOS ─────────────────────────────────────────────────────────────────
+
+const ESTADOS_12 = [
+  {uf:'PR', nome:'Paraná'},
+  {uf:'RS', nome:'Rio Grande do Sul'},
+  {uf:'SP', nome:'São Paulo'},
+  {uf:'RJ', nome:'Rio de Janeiro'},
+  {uf:'MG', nome:'Minas Gerais'},
+];
+
+const ESTADOS_7 = [
+  {uf:'ES', nome:'Espírito Santo'},
+  {uf:'GO', nome:'Goiás'},
+  {uf:'MT', nome:'Mato Grosso'},
+  {uf:'MS', nome:'Mato Grosso do Sul'},
+  {uf:'DF', nome:'Distrito Federal'},
+  {uf:'BA', nome:'Bahia'},
+  {uf:'PE', nome:'Pernambuco'},
+  {uf:'CE', nome:'Ceará'},
+  {uf:'MA', nome:'Maranhão'},
+  {uf:'PB', nome:'Paraíba'},
+  {uf:'RN', nome:'Rio Grande do Norte'},
+  {uf:'AL', nome:'Alagoas'},
+  {uf:'SE', nome:'Sergipe'},
+  {uf:'PI', nome:'Piauí'},
+  {uf:'AM', nome:'Amazonas'},
+  {uf:'PA', nome:'Pará'},
+  {uf:'RO', nome:'Rondônia'},
+  {uf:'AC', nome:'Acre'},
+  {uf:'RR', nome:'Roraima'},
+  {uf:'AP', nome:'Amapá'},
+  {uf:'TO', nome:'Tocantins'},
+];
+
+// Todos os estados para aba 4% (importado interestadual)
+const ESTADOS_4 = [...ESTADOS_12, ...ESTADOS_7];
+
+// Tributos Lucro Presumido
+const PIS    = 0.0065;
+const COFINS = 0.03;
+const CSLL   = 0.0108;
+const IRPJ   = 0.012;
+const OUTROS = PIS + COFINS + CSLL + IRPJ; // 5,93%
+
+const MARKUPS = [10,20,30,40,50,60];
+
+let produtoAtivo = null;
+let mkAtivo      = 30;
+let abaAtiva     = 'sc'; // 'sc' | '4' | '12' | '7'
+
+function setOrigem(v){
+  document.getElementById('f-origem').value = v;
+  document.getElementById('btn-nacional').className  = 'origem-btn' + (v==='nacional'  ? ' ativo nacional'  : ' nacional');
+  document.getElementById('btn-importado').className = 'origem-btn' + (v==='importado' ? ' ativo importado' : ' importado');
+}
+
+// ── CÁLCULOS ──────────────────────────────────────────────────────────────
+
+function calcPreco(custoTotal, markup, icms){
+  const divisor = 1 - (markup/100) - icms - OUTROS;
+  if(divisor <= 0) return null;
+  return custoTotal / divisor;
+}
+
+function calcMargem(preco, custoTotal, icms){
+  return preco - custoTotal - preco * (icms + OUTROS);
+}
+
+function fmt(v){ return 'R$ ' + v.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+function pct(v){ return (v*100).toFixed(2).replace('.',',') + '%'; }
+
+// ── GERA LINHAS DA TABELA ─────────────────────────────────────────────────
+
+function linhaEstado(est, aliq, total){
+  const icms  = aliq / 100;
+  const preco = calcPreco(total, mkAtivo, icms);
+  const ml    = preco ? calcMargem(preco, total, icms) : 0;
+  const mlPct = preco ? (ml / preco * 100) : 0;
+  const ok    = mlPct > 0;
+  const tagCls = `tag-${aliq}`;
+  return `
+  <tr>
+    <td><strong>${est.uf}</strong> — ${est.nome}</td>
+    <td><span class="tag-aliq ${tagCls}">${aliq}%</span></td>
+    <td class="mk-col">${preco ? fmt(preco) : '—'}</td>
+    <td class="${ok?'margem-pos':'margem-neg'}">${preco ? fmt(ml) : '—'}</td>
+    <td>${preco ? `<span class="margem-ok ${ok?'ok':'neg'}">${mlPct.toFixed(1).replace('.',',')}% ${ok?'✓':'✗'}</span>` : '—'}</td>
+  </tr>`;
+}
+
+function tabelaHTML(titulo, rows){
+  return `
+  <div class="tabela-wrap">
+    <div class="tabela-titulo"><h3>${titulo} — Markup ${mkAtivo}%</h3></div>
+    <table>
+      <thead><tr>
+        <th>Estado de destino</th>
+        <th>ICMS operação</th>
+        <th>Preço de venda</th>
+        <th>Margem líq. R$</th>
+        <th>Margem líq. %</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function abaVaziaHTML(icone, titulo, motivo){
+  return `
+  <div class="tabela-wrap">
+    <div class="aba-vazia">
+      <div class="icone">${icone}</div>
+      <p>${titulo}</p>
+      <small>${motivo}</small>
+    </div>
+  </div>`;
+}
+
+// ── RENDERIZA ABA ATIVA ───────────────────────────────────────────────────
+
+function renderAba(orig, total){
+  const isImp = orig === 'importado';
+  let html = '';
+
+  if(abaAtiva === 'sc'){
+    // SC interno sempre disponível (17%) para nacional e importado
+    const icmsSC = 0.17;
+    const preco  = calcPreco(total, mkAtivo, icmsSC);
+    const ml     = preco ? calcMargem(preco, total, icmsSC) : 0;
+    const mlPct  = preco ? (ml/preco*100) : 0;
+    const ok     = mlPct > 0;
+    const rows   = `
+    <tr class="sep-row"><td colspan="5">Santa Catarina — Operação Interna</td></tr>
+    <tr>
+      <td><strong>SC</strong> — Santa Catarina</td>
+      <td><span class="tag-aliq tag-17">17%</span></td>
+      <td class="mk-col">${preco ? fmt(preco) : '—'}</td>
+      <td class="${ok?'margem-pos':'margem-neg'}">${preco ? fmt(ml) : '—'}</td>
+      <td>${preco ? `<span class="margem-ok ${ok?'ok':'neg'}">${mlPct.toFixed(1).replace('.',',')}% ${ok?'✓':'✗'}</span>` : '—'}</td>
+    </tr>`;
+    html = tabelaHTML('Santa Catarina (Operação Interna — 17%)', rows);
+
+  } else if(abaAtiva === '4'){
+    if(!isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Nacionais','A alíquota de 4% é exclusiva para produtos Importados em operações interestaduais (Resolução Senado nº 13/2012).');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 4% (Importado)</td></tr>';
+      ESTADOS_4.forEach(e => { rows += linhaEstado(e, 4, total); });
+      html = tabelaHTML('Operação Interestadual — Importado (4%)', rows);
+    }
+
+  } else if(abaAtiva === '12'){
+    if(isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Importados','Produtos importados usam alíquota de 4% nas operações interestaduais. Consulte a aba 4%.');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 12% (Sul e Sudeste)</td></tr>';
+      ESTADOS_12.forEach(e => { rows += linhaEstado(e, 12, total); });
+      html = tabelaHTML('Operação Interestadual — Sul e Sudeste (12%)', rows);
+    }
+
+  } else if(abaAtiva === '7'){
+    if(isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Importados','Produtos importados usam alíquota de 4% nas operações interestaduais. Consulte a aba 4%.');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 7% (Norte, Nordeste, C-Oeste, ES)</td></tr>';
+      ESTADOS_7.forEach(e => { rows += linhaEstado(e, 7, total); });
+      html = tabelaHTML('Operação Interestadual — Norte/Nordeste/CO/ES (7%)', rows);
+    }
+  }
+
+  document.getElementById('conteudo-aba').innerHTML = html;
+}
+
+// ── ABAS ──────────────────────────────────────────────────────────────────
+
+function setAba(aba){
+  if(!produtoAtivo) return;
+  abaAtiva = aba;
+  // atualiza visual das abas
+  ['sc','4','12','7'].forEach(id => {
+    const el = document.getElementById('aba-'+id);
+    if(el) el.classList.toggle('ativo', id === aba);
+  });
+  renderAba(produtoAtivo.origem, parseFloat(produtoAtivo.custo) + parseFloat(produtoAtivo.frete||0));
+}
+
+// ── RENDERIZA PRODUTO COMPLETO ────────────────────────────────────────────
+
+function renderProduto(p){
+  produtoAtivo = p;
+  // ao trocar de produto, define aba padrão conforme origem
+  abaAtiva = 'sc';
+
+  const custo  = parseFloat(p.custo);
+  const frete  = parseFloat(p.frete || 0);
+  const total  = custo + frete;
+  const orig   = p.origem;
+  const isImp  = orig === 'importado';
+
+  const tagOrig = isImp
+    ? '<span class="tag-origem tag-importado">✈️ Importado</span>'
+    : '<span class="tag-origem tag-nacional">🇧🇷 Nacional</span>';
+
+  const tabsMk = MARKUPS.map(mk =>
+    `<button class="mk-tab ${mk===mkAtivo?'ativo':''}" onclick="setMk(${mk})">${mk}%</button>`
+  ).join('');
+
+  // Monta abas: SC sempre ativa; 4% só importado; 12% e 7% só nacional
+  const abaSC  = `<div class="icms-tab ativo" id="aba-sc" onclick="setAba('sc')">🏠 SC Interno <span class="tag-mini tag-mini-17">17%</span></div>`;
+
+  const aba4   = isImp
+    ? `<div class="icms-tab" id="aba-4" onclick="setAba('4')">✈️ Importado <span class="tag-mini tag-mini-4">4%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-4" title="Apenas para Importados">✈️ Importado <span class="tag-mini tag-mini-4">4%</span></div>`;
+
+  const aba12  = !isImp
+    ? `<div class="icms-tab" id="aba-12" onclick="setAba('12')">🔵 Sul/Sudeste <span class="tag-mini tag-mini-12">12%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-12" title="Apenas para Nacionais">🔵 Sul/Sudeste <span class="tag-mini tag-mini-12">12%</span></div>`;
+
+  const aba7   = !isImp
+    ? `<div class="icms-tab" id="aba-7" onclick="setAba('7')">🟣 Demais Estados <span class="tag-mini tag-mini-7">7%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-7" title="Apenas para Nacionais">🟣 Demais Estados <span class="tag-mini tag-mini-7">7%</span></div>`;
+
+  document.getElementById('main-area').innerHTML = `
+  <div class="prod-header">
+    <div class="prod-title">
+      ${p.codigo ? `<span class="prod-cod">${p.codigo}</span>` : ''}
+      <span class="prod-nome">${p.descricao}</span>
+      ${tagOrig}
+    </div>
+    <div class="prod-meta">
+      <span>Cadastrado por ${p.criado_por || '—'}</span>
+      <span>${p.criado_em || ''}</span>
+    </div>
+  </div>
+
+  <div class="custos-row">
+    <div class="custo-card">
+      <div class="lbl">Custo produto</div>
+      <div class="val">${fmt(custo)}</div>
+    </div>
+    ${frete > 0 ? `<div class="custo-card"><div class="lbl">Frete</div><div class="val">${fmt(frete)}</div></div>` : ''}
+    <div class="custo-card">
+      <div class="lbl">Custo total</div>
+      <div class="val destaque">${fmt(total)}</div>
+    </div>
+    <div class="custo-card">
+      <div class="lbl">PIS + COFINS</div>
+      <div class="val">${pct(PIS+COFINS)}</div>
+      <div class="sub">s/ venda</div>
+    </div>
+    <div class="custo-card">
+      <div class="lbl">CSLL + IRPJ</div>
+      <div class="val">${pct(CSLL+IRPJ)}</div>
+      <div class="sub">s/ venda</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px">
+    <div style="font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Markup aplicado</div>
+    <div class="mk-tabs">${tabsMk}</div>
+  </div>
+
+  <div class="icms-tabs-wrap">
+    <div class="icms-tabs">${abaSC}${aba4}${aba12}${aba7}</div>
+    <div id="conteudo-aba"></div>
+  </div>
+
+  <div style="font-size:.72rem;color:#94a3b8;margin-top:8px">
+    * Margem líquida = Preço − Custo total − (ICMS operação + PIS 0,65% + COFINS 3% + CSLL 1,08% + IRPJ 1,2%)
+    &nbsp;|&nbsp; Importados: ICMS interestadual = 4% (Res. Senado nº 13/2012)
+  </div>`;
+
+  // renderiza aba SC por padrão
+  renderAba(orig, total);
+
+  // atualiza lista
+  document.querySelectorAll('.item-card').forEach(el => el.classList.remove('ativo'));
+}
+
+function setMk(mk){
+  mkAtivo = mk;
+  document.querySelectorAll('.mk-tab').forEach(el => {
+    el.classList.toggle('ativo', parseInt(el.textContent) === mk);
+  });
+  if(produtoAtivo){
+    const total = parseFloat(produtoAtivo.custo) + parseFloat(produtoAtivo.frete||0);
+    renderAba(produtoAtivo.origem, total);
+  }
+}
+
+// ── LISTA ─────────────────────────────────────────────────────────────────
+
+let todosProdutos = [];
+
+function renderLista(list){
+  const el = document.getElementById('lista-produtos');
+  if(!list.length){
+    el.innerHTML = '<div class="lista-vazia">Nenhum produto encontrado</div>';
+    return;
+  }
+  el.innerHTML = list.map(p => `
+    <div class="item-card ${produtoAtivo && produtoAtivo.id===p.id?'ativo':''}" onclick="renderProduto(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      <span class="item-cod">${p.codigo||'—'}</span>
+      <span class="item-desc">${p.descricao}</span>
+      <span class="item-origem ${p.origem==='importado'?'badge-importado':'badge-nacional'}">${p.origem==='importado'?'IMP':'NAC'}</span>
+      <button class="item-lixo" onclick="event.stopPropagation();deletarProduto(${p.id})" title="Excluir">🗑</button>
+    </div>`).join('');
+}
+
+function filtrarProdutos(){
+  const termo = document.getElementById('busca-produto').value.toLowerCase().trim();
+  if(!termo){ renderLista(todosProdutos); return; }
+  const filtrado = todosProdutos.filter(p =>
+    p.descricao.toLowerCase().includes(termo) ||
+    (p.codigo && p.codigo.toLowerCase().includes(termo))
+  );
+  renderLista(filtrado);
+}
+
+async function carregarProdutos(){
+  const res  = await fetch('/api/produtos');
+  todosProdutos = await res.json();
+  filtrarProdutos();
+}
+
+async function salvarProduto(){
+  const desc  = document.getElementById('f-desc').value.trim();
+  const custo = parseFloat(document.getElementById('f-custo').value) || 0;
+  const orig  = document.getElementById('f-origem').value;
+  if(!desc){ alert('Informe a descrição do produto.'); return; }
+  if(custo <= 0){ alert('Informe o custo do produto.'); return; }
+  const body = {
+    codigo:    document.getElementById('f-cod').value.trim(),
+    descricao: desc,
+    custo:     custo,
+    frete:     parseFloat(document.getElementById('f-frete').value) || 0,
+    origem:    orig
+  };
+  const res = await fetch('/api/produtos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(res.ok){
+    ['f-cod','f-desc','f-custo','f-frete'].forEach(id => document.getElementById(id).value='');
+    setOrigem('nacional');
+    await carregarProdutos();
+  } else {
+    const d = await res.json();
+    alert(d.erro || 'Erro ao salvar.');
+  }
+}
+
+async function deletarProduto(id){
+  if(!confirm('Excluir este produto?')) return;
+  await fetch(`/api/produtos/${id}`,{method:'DELETE'});
+  if(produtoAtivo && produtoAtivo.id===id){
+    produtoAtivo = null;
+    document.getElementById('main-area').innerHTML = '<div class="empty-state"><p>Produto excluído. Selecione outro.</p></div>';
+  }
+  await carregarProdutos();
+}
+
+// ── EQUIPE ────────────────────────────────────────────────────────────────
+
+function abrirEquipe(){ document.getElementById('overlay-equipe').classList.add('show'); carregarUsuarios(); }
+function fecharEquipe(){ document.getElementById('overlay-equipe').classList.remove('show'); }
+function showMsg(id,txt,tipo){ const el=document.getElementById(id); el.className='msg '+tipo; el.textContent=txt; }
+
+async function carregarUsuarios(){
+  const res  = await fetch('/api/usuarios');
+  const list = await res.json();
+  document.getElementById('lista-usuarios').innerHTML = list.map(u=>`
+    <div class="u-item">
+      <div style="flex:1">
+        <div class="u-nome">${u.nome}${u.admin?'<span class="u-badge">ADMIN</span>':''}</div>
+        <div class="u-email">${u.email}</div>
+      </div>
+      <button class="btn-sm btn-danger" onclick="removerUsuario(${u.id})">Remover</button>
+    </div>`).join('');
+}
+
+async function criarUsuario(){
+  const nome  = document.getElementById('u-nome').value.trim();
+  const email = document.getElementById('u-email').value.trim();
+  const senha = document.getElementById('u-senha').value;
+  const admin = document.getElementById('u-admin').value==='true';
+  if(!nome||!email||!senha){ showMsg('u-msg','Preencha todos os campos.','err'); return; }
+  const res = await fetch('/api/usuarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email,senha,admin})});
+  if(res.ok){ showMsg('u-msg','Usuário criado!','ok'); ['u-nome','u-email','u-senha'].forEach(id=>document.getElementById(id).value=''); await carregarUsuarios(); }
+  else{ const d=await res.json(); showMsg('u-msg',d.erro||'Erro.','err'); }
+}
+
+async function removerUsuario(id){
+  if(!confirm('Remover este usuário?')) return;
+  await fetch(`/api/usuarios/${id}`,{method:'DELETE'});
+  await carregarUsuarios();
+}
+
+carregarProdutos();
+</script>
+</body>
+</html>
