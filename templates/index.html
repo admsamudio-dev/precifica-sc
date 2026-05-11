@@ -43,8 +43,13 @@ nav{background:#0f172a;padding:0 24px;height:56px;display:flex;align-items:cente
 
 /* LISTA */
 .lista-header{padding:12px 20px;border-top:1px solid #e2e8f0;background:#f8fafc}
-.lista-header h3{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.lista{flex:1;overflow-y:auto;max-height:280px}
+.lista-header h3{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.busca-wrap{position:relative;margin-top:6px}
+.busca-wrap input{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 12px 8px 32px;font-size:.82rem;color:#1e293b;background:#fff;outline:none;transition:border .2s}
+.busca-wrap input:focus{border-color:#0ea5e9}
+.busca-wrap .ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.85rem;pointer-events:none}
+.lista-vazia{padding:16px;color:#94a3b8;font-size:.82rem;text-align:center}
+.lista{flex:1;overflow-y:auto;max-height:260px}
 .item-card{padding:10px 16px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px}
 .item-card:hover{background:#f0f9ff}
 .item-card.ativo{background:#e0f2fe;border-left:3px solid #0ea5e9}
@@ -201,6 +206,10 @@ tr:hover td{background:#f8fafc}
 
     <div class="lista-header">
       <h3>Produtos cadastrados</h3>
+      <div class="busca-wrap">
+        <span class="ico">🔍</span>
+        <input id="busca-produto" placeholder="Buscar por código ou descrição..." oninput="filtrarProdutos()">
+      </div>
     </div>
     <div class="lista" id="lista-produtos"></div>
   </div>
@@ -533,12 +542,12 @@ function setMk(mk){
 
 // ── LISTA ─────────────────────────────────────────────────────────────────
 
-async function carregarProdutos(){
-  const res  = await fetch('/api/produtos');
-  const list = await res.json();
-  const el   = document.getElementById('lista-produtos');
+let todosProdutos = [];
+
+function renderLista(list){
+  const el = document.getElementById('lista-produtos');
   if(!list.length){
-    el.innerHTML = '<div style="padding:20px;color:#94a3b8;font-size:.82rem;text-align:center">Nenhum produto ainda</div>';
+    el.innerHTML = '<div class="lista-vazia">Nenhum produto encontrado</div>';
     return;
   }
   el.innerHTML = list.map(p => `
@@ -548,6 +557,22 @@ async function carregarProdutos(){
       <span class="item-origem ${p.origem==='importado'?'badge-importado':'badge-nacional'}">${p.origem==='importado'?'IMP':'NAC'}</span>
       <button class="item-lixo" onclick="event.stopPropagation();deletarProduto(${p.id})" title="Excluir">🗑</button>
     </div>`).join('');
+}
+
+function filtrarProdutos(){
+  const termo = document.getElementById('busca-produto').value.toLowerCase().trim();
+  if(!termo){ renderLista(todosProdutos); return; }
+  const filtrado = todosProdutos.filter(p =>
+    p.descricao.toLowerCase().includes(termo) ||
+    (p.codigo && p.codigo.toLowerCase().includes(termo))
+  );
+  renderLista(filtrado);
+}
+
+async function carregarProdutos(){
+  const res  = await fetch('/api/produtos');
+  todosProdutos = await res.json();
+  filtrarProdutos();
 }
 
 async function salvarProduto(){
