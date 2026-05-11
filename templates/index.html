@@ -37,9 +37,6 @@ nav{background:#0f172a;padding:0 24px;height:56px;display:flex;align-items:cente
 .origem-btn{flex:1;padding:10px;border:2px solid #e2e8f0;border-radius:8px;background:#f8fafc;cursor:pointer;font-size:.85rem;font-weight:600;color:#64748b;transition:all .2s;text-align:center}
 .origem-btn.ativo.nacional{border-color:#16a34a;background:#f0fdf4;color:#16a34a}
 .origem-btn.ativo.importado{border-color:#d97706;background:#fffbeb;color:#d97706}
-.origem-badge{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
-.badge-nacional{background:#dcfce7;color:#16a34a}
-.badge-importado{background:#fef3c7;color:#d97706}
 
 .btn-salvar{width:100%;background:#0ea5e9;border:none;border-radius:8px;padding:12px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px}
 .btn-salvar:hover{background:#0284c7}
@@ -54,6 +51,8 @@ nav{background:#0f172a;padding:0 24px;height:56px;display:flex;align-items:cente
 .item-cod{font-size:.7rem;font-weight:700;color:#94a3b8;min-width:44px}
 .item-desc{flex:1;font-size:.82rem;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item-origem{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.badge-nacional{background:#dcfce7;color:#16a34a}
+.badge-importado{background:#fef3c7;color:#d97706}
 .item-lixo{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:1rem;padding:2px 4px;border-radius:4px;transition:color .2s}
 .item-lixo:hover{color:#ef4444}
 
@@ -79,11 +78,28 @@ nav{background:#0f172a;padding:0 24px;height:56px;display:flex;align-items:cente
 .custo-card .lbl{font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .custo-card .val{font-size:1.05rem;font-weight:700;color:#0f172a}
 .custo-card .val.destaque{color:#0ea5e9}
-.custo-card .val.alerta{color:#dc2626}
 .custo-card .sub{font-size:.72rem;color:#94a3b8;margin-top:2px}
 
+/* MARKUPS */
+.mk-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.mk-tab{padding:6px 14px;border-radius:6px;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;font-size:.8rem;font-weight:600;color:#64748b;transition:all .2s}
+.mk-tab.ativo{border-color:#0ea5e9;background:#e0f2fe;color:#0284c7}
+
+/* ABAS DE ICMS */
+.icms-tabs-wrap{margin-bottom:0}
+.icms-tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:0}
+.icms-tab{padding:10px 20px;font-size:.82rem;font-weight:700;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px;border-radius:6px 6px 0 0;background:none;border-left:none;border-right:none;border-top:none;user-select:none}
+.icms-tab:hover{color:#475569;background:#f8fafc}
+.icms-tab.ativo{color:#0284c7;border-bottom:3px solid #0ea5e9;background:#f0f9ff}
+.icms-tab.bloqueado{opacity:.35;cursor:not-allowed;pointer-events:none}
+.icms-tab .tag-mini{font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:2px}
+.tag-mini-17{background:#fee2e2;color:#dc2626}
+.tag-mini-12{background:#dbeafe;color:#1d4ed8}
+.tag-mini-7{background:#ede9fe;color:#7c3aed}
+.tag-mini-4{background:#fef3c7;color:#d97706}
+
 /* TABELA DE ESTADOS */
-.tabela-wrap{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px}
+.tabela-wrap{background:#fff;border-radius:0 12px 12px 12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;margin-bottom:16px}
 .tabela-titulo{padding:14px 20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:8px}
 .tabela-titulo h3{font-size:.85rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.5px}
 table{width:100%;border-collapse:collapse}
@@ -91,10 +107,11 @@ thead tr{background:#f8fafc}
 th{padding:10px 14px;text-align:left;font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
 td{padding:9px 14px;border-top:1px solid #f1f5f9;font-size:.83rem;color:#334155;white-space:nowrap}
 tr:hover td{background:#f8fafc}
-.tag-aliq{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:4px}
+.tag-aliq{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:4px}
 .tag-17{background:#fee2e2;color:#dc2626}
 .tag-12{background:#dbeafe;color:#1d4ed8}
 .tag-7{background:#ede9fe;color:#7c3aed}
+.tag-4{background:#fef3c7;color:#b45309}
 .mk-col{font-weight:600}
 .margem-pos{color:#16a34a;font-weight:700}
 .margem-neg{color:#dc2626;font-weight:700}
@@ -103,10 +120,11 @@ tr:hover td{background:#f8fafc}
 .neg{background:#fee2e2;color:#dc2626}
 .sep-row td{background:#f8fafc;padding:6px 14px;font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;border-top:2px solid #e2e8f0}
 
-/* MARKUPS */
-.mk-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.mk-tab{padding:6px 14px;border-radius:6px;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;font-size:.8rem;font-weight:600;color:#64748b;transition:all .2s}
-.mk-tab.ativo{border-color:#0ea5e9;background:#e0f2fe;color:#0284c7}
+/* VAZIO (aba bloqueada) */
+.aba-vazia{padding:40px 20px;text-align:center;color:#cbd5e1}
+.aba-vazia .icone{font-size:2.5rem;margin-bottom:12px;opacity:.5}
+.aba-vazia p{font-size:.88rem;font-weight:600;margin-bottom:4px;color:#94a3b8}
+.aba-vazia small{font-size:.78rem;color:#cbd5e1}
 
 /* MODAL EQUIPE */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
@@ -225,52 +243,53 @@ tr:hover td{background:#f8fafc}
 <script>
 // ── DADOS ─────────────────────────────────────────────────────────────────
 
-// Estados brasileiros com alíquota interestadual aplicável (saída de SC)
-// SC é origem → destino determina alíquota
-// Consumidor final nas regiões Sul/Sudeste (exceto ES) = 12%
-// Demais estados = 7%
-const ESTADOS = [
-  // 12% — Sul e Sudeste (exceto ES)
-  {uf:'PR', nome:'Paraná',         aliq:12, regiao:'Sul'},
-  {uf:'RS', nome:'Rio Grande do Sul', aliq:12, regiao:'Sul'},
-  {uf:'SP', nome:'São Paulo',      aliq:12, regiao:'Sudeste'},
-  {uf:'RJ', nome:'Rio de Janeiro', aliq:12, regiao:'Sudeste'},
-  {uf:'MG', nome:'Minas Gerais',   aliq:12, regiao:'Sudeste'},
-  // 7% — Centro-Oeste, Norte, Nordeste + ES
-  {uf:'ES', nome:'Espírito Santo', aliq:7,  regiao:'Sudeste'},
-  {uf:'GO', nome:'Goiás',          aliq:7,  regiao:'Centro-Oeste'},
-  {uf:'MT', nome:'Mato Grosso',    aliq:7,  regiao:'Centro-Oeste'},
-  {uf:'MS', nome:'Mato Grosso do Sul', aliq:7, regiao:'Centro-Oeste'},
-  {uf:'DF', nome:'Distrito Federal',  aliq:7, regiao:'Centro-Oeste'},
-  {uf:'BA', nome:'Bahia',          aliq:7,  regiao:'Nordeste'},
-  {uf:'PE', nome:'Pernambuco',     aliq:7,  regiao:'Nordeste'},
-  {uf:'CE', nome:'Ceará',          aliq:7,  regiao:'Nordeste'},
-  {uf:'MA', nome:'Maranhão',       aliq:7,  regiao:'Nordeste'},
-  {uf:'PB', nome:'Paraíba',        aliq:7,  regiao:'Nordeste'},
-  {uf:'RN', nome:'Rio Grande do Norte', aliq:7, regiao:'Nordeste'},
-  {uf:'AL', nome:'Alagoas',        aliq:7,  regiao:'Nordeste'},
-  {uf:'SE', nome:'Sergipe',        aliq:7,  regiao:'Nordeste'},
-  {uf:'PI', nome:'Piauí',          aliq:7,  regiao:'Nordeste'},
-  {uf:'AM', nome:'Amazonas',       aliq:7,  regiao:'Norte'},
-  {uf:'PA', nome:'Pará',           aliq:7,  regiao:'Norte'},
-  {uf:'RO', nome:'Rondônia',       aliq:7,  regiao:'Norte'},
-  {uf:'AC', nome:'Acre',           aliq:7,  regiao:'Norte'},
-  {uf:'RR', nome:'Roraima',        aliq:7,  regiao:'Norte'},
-  {uf:'AP', nome:'Amapá',          aliq:7,  regiao:'Norte'},
-  {uf:'TO', nome:'Tocantins',      aliq:7,  regiao:'Norte'},
+const ESTADOS_12 = [
+  {uf:'PR', nome:'Paraná'},
+  {uf:'RS', nome:'Rio Grande do Sul'},
+  {uf:'SP', nome:'São Paulo'},
+  {uf:'RJ', nome:'Rio de Janeiro'},
+  {uf:'MG', nome:'Minas Gerais'},
 ];
 
-// Tributos Lucro Presumido
-const PIS       = 0.0065;   // 0,65%
-const COFINS    = 0.03;     // 3%
-const CSLL      = 0.0108;   // 1,08%
-const IRPJ      = 0.012;    // 1,2%
-const OUTROS    = PIS + COFINS + CSLL + IRPJ; // 5,93%
+const ESTADOS_7 = [
+  {uf:'ES', nome:'Espírito Santo'},
+  {uf:'GO', nome:'Goiás'},
+  {uf:'MT', nome:'Mato Grosso'},
+  {uf:'MS', nome:'Mato Grosso do Sul'},
+  {uf:'DF', nome:'Distrito Federal'},
+  {uf:'BA', nome:'Bahia'},
+  {uf:'PE', nome:'Pernambuco'},
+  {uf:'CE', nome:'Ceará'},
+  {uf:'MA', nome:'Maranhão'},
+  {uf:'PB', nome:'Paraíba'},
+  {uf:'RN', nome:'Rio Grande do Norte'},
+  {uf:'AL', nome:'Alagoas'},
+  {uf:'SE', nome:'Sergipe'},
+  {uf:'PI', nome:'Piauí'},
+  {uf:'AM', nome:'Amazonas'},
+  {uf:'PA', nome:'Pará'},
+  {uf:'RO', nome:'Rondônia'},
+  {uf:'AC', nome:'Acre'},
+  {uf:'RR', nome:'Roraima'},
+  {uf:'AP', nome:'Amapá'},
+  {uf:'TO', nome:'Tocantins'},
+];
 
-const MARKUPS   = [10,20,30,40,50,60];
+// Todos os estados para aba 4% (importado interestadual)
+const ESTADOS_4 = [...ESTADOS_12, ...ESTADOS_7];
+
+// Tributos Lucro Presumido
+const PIS    = 0.0065;
+const COFINS = 0.03;
+const CSLL   = 0.0108;
+const IRPJ   = 0.012;
+const OUTROS = PIS + COFINS + CSLL + IRPJ; // 5,93%
+
+const MARKUPS = [10,20,30,40,50,60];
 
 let produtoAtivo = null;
 let mkAtivo      = 30;
+let abaAtiva     = 'sc'; // 'sc' | '4' | '12' | '7'
 
 function setOrigem(v){
   document.getElementById('f-origem').value = v;
@@ -281,56 +300,79 @@ function setOrigem(v){
 // ── CÁLCULOS ──────────────────────────────────────────────────────────────
 
 function calcPreco(custoTotal, markup, icms){
-  // Preço = Custo / (1 - markup% - ICMS% - PIS - COFINS - CSLL - IRPJ)
   const divisor = 1 - (markup/100) - icms - OUTROS;
   if(divisor <= 0) return null;
   return custoTotal / divisor;
 }
 
 function calcMargem(preco, custoTotal, icms){
-  const tributos = preco * (icms + OUTROS);
-  return preco - custoTotal - tributos;
+  return preco - custoTotal - preco * (icms + OUTROS);
 }
 
 function fmt(v){ return 'R$ ' + v.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
-function pct(v){ return (v*100).toFixed(1).replace('.',',') + '%'; }
+function pct(v){ return (v*100).toFixed(2).replace('.',',') + '%'; }
 
-// ── RENDERIZAÇÃO ──────────────────────────────────────────────────────────
+// ── GERA LINHAS DA TABELA ─────────────────────────────────────────────────
 
-function renderProduto(p){
-  produtoAtivo = p;
-  const custo  = parseFloat(p.custo);
-  const frete  = parseFloat(p.frete || 0);
-  const total  = custo + frete;
-  const orig   = p.origem; // 'nacional' | 'importado'
+function linhaEstado(est, aliq, total){
+  const icms  = aliq / 100;
+  const preco = calcPreco(total, mkAtivo, icms);
+  const ml    = preco ? calcMargem(preco, total, icms) : 0;
+  const mlPct = preco ? (ml / preco * 100) : 0;
+  const ok    = mlPct > 0;
+  const tagCls = `tag-${aliq}`;
+  return `
+  <tr>
+    <td><strong>${est.uf}</strong> — ${est.nome}</td>
+    <td><span class="tag-aliq ${tagCls}">${aliq}%</span></td>
+    <td class="mk-col">${preco ? fmt(preco) : '—'}</td>
+    <td class="${ok?'margem-pos':'margem-neg'}">${preco ? fmt(ml) : '—'}</td>
+    <td>${preco ? `<span class="margem-ok ${ok?'ok':'neg'}">${mlPct.toFixed(1).replace('.',',')}% ${ok?'✓':'✗'}</span>` : '—'}</td>
+  </tr>`;
+}
 
-  // ICMS operação interna SC
-  const icmsSC = 0.17;
+function tabelaHTML(titulo, rows){
+  return `
+  <div class="tabela-wrap">
+    <div class="tabela-titulo"><h3>${titulo} — Markup ${mkAtivo}%</h3></div>
+    <table>
+      <thead><tr>
+        <th>Estado de destino</th>
+        <th>ICMS operação</th>
+        <th>Preço de venda</th>
+        <th>Margem líq. R$</th>
+        <th>Margem líq. %</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
 
-  // Tributos totais s/ venda interna
-  const tribTotal = icmsSC + OUTROS;
+function abaVaziaHTML(icone, titulo, motivo){
+  return `
+  <div class="tabela-wrap">
+    <div class="aba-vazia">
+      <div class="icone">${icone}</div>
+      <p>${titulo}</p>
+      <small>${motivo}</small>
+    </div>
+  </div>`;
+}
 
-  // ─ Header ─
-  const tagOrig = orig === 'importado'
-    ? '<span class="tag-origem tag-importado">✈️ Importado</span>'
-    : '<span class="tag-origem tag-nacional">🇧🇷 Nacional</span>';
+// ── RENDERIZA ABA ATIVA ───────────────────────────────────────────────────
 
-  // ─ Tabs de markup ─
-  const tabsMk = MARKUPS.map(mk =>
-    `<button class="mk-tab ${mk===mkAtivo?'ativo':''}" onclick="setMk(${mk})">${mk}%</button>`
-  ).join('');
+function renderAba(orig, total){
+  const isImp = orig === 'importado';
+  let html = '';
 
-  // ─ Tabela de estados ─
-  // SC interno sempre primeiro
-  let tabelaRows = '';
-
-  // SC interno
-  {
-    const preco = calcPreco(total, mkAtivo, icmsSC);
-    const ml    = preco ? calcMargem(preco, total, icmsSC) : 0;
-    const mlPct = preco ? (ml/preco*100) : 0;
-    const ok    = mlPct > 0;
-    tabelaRows += `
+  if(abaAtiva === 'sc'){
+    // SC interno sempre disponível (17%) para nacional e importado
+    const icmsSC = 0.17;
+    const preco  = calcPreco(total, mkAtivo, icmsSC);
+    const ml     = preco ? calcMargem(preco, total, icmsSC) : 0;
+    const mlPct  = preco ? (ml/preco*100) : 0;
+    const ok     = mlPct > 0;
+    const rows   = `
     <tr class="sep-row"><td colspan="5">Santa Catarina — Operação Interna</td></tr>
     <tr>
       <td><strong>SC</strong> — Santa Catarina</td>
@@ -339,28 +381,87 @@ function renderProduto(p){
       <td class="${ok?'margem-pos':'margem-neg'}">${preco ? fmt(ml) : '—'}</td>
       <td>${preco ? `<span class="margem-ok ${ok?'ok':'neg'}">${mlPct.toFixed(1).replace('.',',')}% ${ok?'✓':'✗'}</span>` : '—'}</td>
     </tr>`;
+    html = tabelaHTML('Santa Catarina (Operação Interna — 17%)', rows);
+
+  } else if(abaAtiva === '4'){
+    if(!isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Nacionais','A alíquota de 4% é exclusiva para produtos Importados em operações interestaduais (Resolução Senado nº 13/2012).');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 4% (Importado)</td></tr>';
+      ESTADOS_4.forEach(e => { rows += linhaEstado(e, 4, total); });
+      html = tabelaHTML('Operação Interestadual — Importado (4%)', rows);
+    }
+
+  } else if(abaAtiva === '12'){
+    if(isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Importados','Produtos importados usam alíquota de 4% nas operações interestaduais. Consulte a aba 4%.');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 12% (Sul e Sudeste)</td></tr>';
+      ESTADOS_12.forEach(e => { rows += linhaEstado(e, 12, total); });
+      html = tabelaHTML('Operação Interestadual — Sul e Sudeste (12%)', rows);
+    }
+
+  } else if(abaAtiva === '7'){
+    if(isImp){
+      html = abaVaziaHTML('🚫','Não aplicável para produtos Importados','Produtos importados usam alíquota de 4% nas operações interestaduais. Consulte a aba 4%.');
+    } else {
+      let rows = '<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS 7% (Norte, Nordeste, C-Oeste, ES)</td></tr>';
+      ESTADOS_7.forEach(e => { rows += linhaEstado(e, 7, total); });
+      html = tabelaHTML('Operação Interestadual — Norte/Nordeste/CO/ES (7%)', rows);
+    }
   }
 
-  // Agrupa por alíquota
-  [12,7].forEach(aliq => {
-    const grupo = ESTADOS.filter(e => e.aliq === aliq);
-    const icms  = aliq/100;
-    tabelaRows += `<tr class="sep-row"><td colspan="5">Operação Interestadual — ICMS ${aliq}%</td></tr>`;
-    grupo.forEach(est => {
-      const preco = calcPreco(total, mkAtivo, icms);
-      const ml    = preco ? calcMargem(preco, total, icms) : 0;
-      const mlPct = preco ? (ml/preco*100) : 0;
-      const ok    = mlPct > 0;
-      tabelaRows += `
-      <tr>
-        <td><strong>${est.uf}</strong> — ${est.nome}</td>
-        <td><span class="tag-aliq tag-${aliq}">${aliq}%</span></td>
-        <td class="mk-col">${preco ? fmt(preco) : '—'}</td>
-        <td class="${ok?'margem-pos':'margem-neg'}">${preco ? fmt(ml) : '—'}</td>
-        <td>${preco ? `<span class="margem-ok ${ok?'ok':'neg'}">${mlPct.toFixed(1).replace('.',',')}% ${ok?'✓':'✗'}</span>` : '—'}</td>
-      </tr>`;
-    });
+  document.getElementById('conteudo-aba').innerHTML = html;
+}
+
+// ── ABAS ──────────────────────────────────────────────────────────────────
+
+function setAba(aba){
+  if(!produtoAtivo) return;
+  abaAtiva = aba;
+  // atualiza visual das abas
+  ['sc','4','12','7'].forEach(id => {
+    const el = document.getElementById('aba-'+id);
+    if(el) el.classList.toggle('ativo', id === aba);
   });
+  renderAba(produtoAtivo.origem, parseFloat(produtoAtivo.custo) + parseFloat(produtoAtivo.frete||0));
+}
+
+// ── RENDERIZA PRODUTO COMPLETO ────────────────────────────────────────────
+
+function renderProduto(p){
+  produtoAtivo = p;
+  // ao trocar de produto, define aba padrão conforme origem
+  abaAtiva = 'sc';
+
+  const custo  = parseFloat(p.custo);
+  const frete  = parseFloat(p.frete || 0);
+  const total  = custo + frete;
+  const orig   = p.origem;
+  const isImp  = orig === 'importado';
+
+  const tagOrig = isImp
+    ? '<span class="tag-origem tag-importado">✈️ Importado</span>'
+    : '<span class="tag-origem tag-nacional">🇧🇷 Nacional</span>';
+
+  const tabsMk = MARKUPS.map(mk =>
+    `<button class="mk-tab ${mk===mkAtivo?'ativo':''}" onclick="setMk(${mk})">${mk}%</button>`
+  ).join('');
+
+  // Monta abas: SC sempre ativa; 4% só importado; 12% e 7% só nacional
+  const abaSC  = `<div class="icms-tab ativo" id="aba-sc" onclick="setAba('sc')">🏠 SC Interno <span class="tag-mini tag-mini-17">17%</span></div>`;
+
+  const aba4   = isImp
+    ? `<div class="icms-tab" id="aba-4" onclick="setAba('4')">✈️ Importado <span class="tag-mini tag-mini-4">4%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-4" title="Apenas para Importados">✈️ Importado <span class="tag-mini tag-mini-4">4%</span></div>`;
+
+  const aba12  = !isImp
+    ? `<div class="icms-tab" id="aba-12" onclick="setAba('12')">🔵 Sul/Sudeste <span class="tag-mini tag-mini-12">12%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-12" title="Apenas para Nacionais">🔵 Sul/Sudeste <span class="tag-mini tag-mini-12">12%</span></div>`;
+
+  const aba7   = !isImp
+    ? `<div class="icms-tab" id="aba-7" onclick="setAba('7')">🟣 Demais Estados <span class="tag-mini tag-mini-7">7%</span></div>`
+    : `<div class="icms-tab bloqueado" id="aba-7" title="Apenas para Nacionais">🟣 Demais Estados <span class="tag-mini tag-mini-7">7%</span></div>`;
 
   document.getElementById('main-area').innerHTML = `
   <div class="prod-header">
@@ -402,31 +503,32 @@ function renderProduto(p){
     <div class="mk-tabs">${tabsMk}</div>
   </div>
 
-  <div class="tabela-wrap">
-    <div class="tabela-titulo">
-      <h3>Precificação por estado — Markup ${mkAtivo}%</h3>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Estado de destino</th>
-          <th>ICMS operação</th>
-          <th>Preço de venda</th>
-          <th>Margem líq. R$</th>
-          <th>Margem líq. %</th>
-        </tr>
-      </thead>
-      <tbody>${tabelaRows}</tbody>
-    </table>
+  <div class="icms-tabs-wrap">
+    <div class="icms-tabs">${abaSC}${aba4}${aba12}${aba7}</div>
+    <div id="conteudo-aba"></div>
   </div>
-  <div style="font-size:.72rem;color:#94a3b8;margin-top:-8px">
+
+  <div style="font-size:.72rem;color:#94a3b8;margin-top:8px">
     * Margem líquida = Preço − Custo total − (ICMS operação + PIS 0,65% + COFINS 3% + CSLL 1,08% + IRPJ 1,2%)
+    &nbsp;|&nbsp; Importados: ICMS interestadual = 4% (Res. Senado nº 13/2012)
   </div>`;
+
+  // renderiza aba SC por padrão
+  renderAba(orig, total);
+
+  // atualiza lista
+  document.querySelectorAll('.item-card').forEach(el => el.classList.remove('ativo'));
 }
 
 function setMk(mk){
   mkAtivo = mk;
-  if(produtoAtivo) renderProduto(produtoAtivo);
+  document.querySelectorAll('.mk-tab').forEach(el => {
+    el.classList.toggle('ativo', parseInt(el.textContent) === mk);
+  });
+  if(produtoAtivo){
+    const total = parseFloat(produtoAtivo.custo) + parseFloat(produtoAtivo.frete||0);
+    renderAba(produtoAtivo.origem, total);
+  }
 }
 
 // ── LISTA ─────────────────────────────────────────────────────────────────
@@ -449,17 +551,17 @@ async function carregarProdutos(){
 }
 
 async function salvarProduto(){
-  const desc = document.getElementById('f-desc').value.trim();
+  const desc  = document.getElementById('f-desc').value.trim();
   const custo = parseFloat(document.getElementById('f-custo').value) || 0;
   const orig  = document.getElementById('f-origem').value;
   if(!desc){ alert('Informe a descrição do produto.'); return; }
   if(custo <= 0){ alert('Informe o custo do produto.'); return; }
   const body = {
-    codigo:   document.getElementById('f-cod').value.trim(),
+    codigo:    document.getElementById('f-cod').value.trim(),
     descricao: desc,
-    custo:    custo,
-    frete:    parseFloat(document.getElementById('f-frete').value) || 0,
-    origem:   orig
+    custo:     custo,
+    frete:     parseFloat(document.getElementById('f-frete').value) || 0,
+    origem:    orig
   };
   const res = await fetch('/api/produtos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(res.ok){
