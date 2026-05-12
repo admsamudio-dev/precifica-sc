@@ -7,7 +7,12 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'troque-esta-chave-em-producao-123')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///precifica.db')
+
+# Render usa "postgres://" mas SQLAlchemy exige "postgresql://"
+_db_url = os.environ.get('DATABASE_URL', 'sqlite:///precifica.db')
+if _db_url.startswith('postgres://'):
+    _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = _db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
